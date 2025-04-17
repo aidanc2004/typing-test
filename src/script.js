@@ -1,6 +1,7 @@
 // Aidan Carey, April 2025
 
 const currentWordsDOM = document.getElementById("current-words");
+const typedWordsDOM = document.getElementById("typed-words");
 const currentWordDOM = document.getElementById("current-word");
 const typingAreaDOM = document.getElementById("typing-area");
 
@@ -9,8 +10,9 @@ function randomWord() {
   return wordsList[Math.floor(Math.random() * wordsList.length)]
 }
 
-// Current words to type
-let currentWords = [];
+let currentWords = []; // Current words to type
+let typedWords = []; // Previously typed words
+
 for (let i = 0; i < 20; i++) {
   currentWords.push(randomWord());
 }
@@ -29,13 +31,19 @@ typingAreaDOM.oninput = () => {
 
   // Next word on space
   if (typed === currentWord + " ") {
-    // Update current word
+    typedWords.push(currentWord);
+    currentWords[currentWordIndex] = "";
+    
+    // Update current word    
     currentWordIndex++;
     currentWord = currentWords[currentWordIndex];
 
     currentWordDOM.textContent = currentWord;
 
-    // Clear typing area
-    typingAreaDOM.value = "";    
+    typingAreaDOM.value = "";
+
+    // Update current words list
+    typedWordsDOM.textContent = typedWords.join(" ");
+    currentWordsDOM.textContent = currentWords.join(" ");
   }
 }

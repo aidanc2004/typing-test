@@ -1,6 +1,8 @@
 /* Aidan Carey, April 2025 */
 
 * {
+  padding: 0;
+  margin: 0;
   background-color: WhiteSmoke;
   color: #212121;
   font-family: Verdana, sans-serif;
@@ -19,10 +21,12 @@ body {
 
 h1 {
   font-size: 1.5rem;
+  margin: 1rem;
 }
 
 #words-container {
-  border: 1px solid black;
+  padding: 1rem;
+  border: 1px solid gray;
   width: 60vw;
 }
 
@@ -30,10 +34,15 @@ h1 {
   width: 60vw;
 }
 
-#current-word {
+#typed-words {
   color: gray;
 }
 
 #typing-area {
   margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+#current-word {
+  color: gray;
 }
