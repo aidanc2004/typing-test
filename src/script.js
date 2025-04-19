@@ -4,6 +4,11 @@ const currentWordsDOM = document.getElementById("current-words");
 const typedWordsDOM = document.getElementById("typed-words");
 const typingAreaDOM = document.getElementById("typing-area");
 
+let currentWords = []; // Current words to type
+let typedWords = [];   // Previously typed words
+let currentWordIndex;  // Index of the current word in currentWords
+let currentWord;       // Current word to type
+
 // Choose a random word from the word list
 function randomWord() {
   return wordsList[Math.floor(Math.random() * wordsList.length)]
@@ -11,6 +16,8 @@ function randomWord() {
 
 // Show correct or incorrect letters below typing area
 function updateColor(typed) {
+  if (currentWord === undefined) return;
+  
   coloredWord = "";
 
   let i = 0;
@@ -27,26 +34,41 @@ function updateColor(typed) {
     coloredWord += `<span style="color:black;">` + currentWord[i] + `</span>`;
   }
 
-  //currentWordDOM.innerHTML = coloredWord;
-
-  return coloredWord;
+  return highlightWord(coloredWord);
 }
 
-let currentWords = []; // Current words to type
-let typedWords = []; // Previously typed words
-
-for (let i = 0; i < 20; i++) {
-  currentWords.push(randomWord().toLowerCase());
+// highlight a word using #highlighted
+function highlightWord(word) {
+  return `<span id="highlighted">` + word + `</span>`;
 }
 
-currentWordsDOM.textContent = currentWords.join(" ");
+// return the string of currentWords with the first word highlighted
+function currentWordsHighlighted() {
+  const i = currentWordIndex;
+  if (i >= currentWords.length) return "";
+  
+  let newWords = [...currentWords];
+  newWords[i] = highlightWord(newWords[i]);
+  return newWords.join(" ");
+}
 
-// Current word to type
-let currentWordIndex = 0;
-let currentWord = currentWords[currentWordIndex];
+// Fill list, set current word, etc
+function setup() {
+  // Fill words list
+  for (let i = 0; i < 20; i++) {
+    currentWords.push(randomWord().toLowerCase());
+  }
 
+  // Current word to type
+  currentWordIndex = 0;
+  currentWord = currentWords[currentWordIndex];
+
+  currentWordsDOM.innerHTML = currentWordsHighlighted();
+}
+
+// Whenever a letter is typed
 typingAreaDOM.oninput = () => {
-  // Currently typed word
+  // ly typed word
   let typed = typingAreaDOM.value;
 
   // Show correct letters
@@ -54,7 +76,7 @@ typingAreaDOM.oninput = () => {
 
   currentWithColored = [...currentWords];
   currentWithColored[currentWordIndex] = coloredWord;
-
+  
   currentWordsDOM.innerHTML = currentWithColored.join(" ");
 
   // Next word on space
@@ -70,6 +92,9 @@ typingAreaDOM.oninput = () => {
 
     // Update current words list
     typedWordsDOM.textContent = typedWords.join(" ");
-    currentWordsDOM.textContent = currentWords.join(" ");
+    currentWordsDOM.innerHTML = currentWordsHighlighted();
   }
 }
+
+// Start app
+setup();
