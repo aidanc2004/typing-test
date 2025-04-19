@@ -11,11 +11,16 @@ let typedWords = [];      // Previously typed words
 let currentWordIndex;     // Index of the current word in currentWords
 let currentWord;          // Current word to type
 let timerStarted = false; // If the timer is started
-let timerLength = 15;     // Timer length in seconds
+let timerLength = 30;     // Timer length in seconds
 
 // Choose a random word from the word list
 function randomWord() {
   return wordsList[Math.floor(Math.random() * wordsList.length)]
+}
+
+// Get length of currentWords exluding blank words
+function currentWordsLength() {
+  return currentWords.filter(word => word !== "").length;
 }
 
 // Show correct or incorrect letters below typing area
@@ -138,6 +143,13 @@ typingAreaDOM.oninput = () => {
     // Update current words list
     typedWordsDOM.textContent = typedWords.join(" ");
     currentWordsDOM.innerHTML = currentWordsHighlighted();
+  }
+
+  // Add more words
+  if (currentWordsLength() < 10) {
+    for (let i = 0; i < 10; i++) {
+      currentWords.push(randomWord().toLowerCase());
+    }
   }
 }
 
