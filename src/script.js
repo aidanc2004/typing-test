@@ -4,12 +4,14 @@ const currentWordsDOM = document.getElementById("current-words");
 const typedWordsDOM = document.getElementById("typed-words");
 const typingAreaDOM = document.getElementById("typing-area");
 const timerDOM = document.getElementById("timer");
+const wpmDOM = document.getElementById("wpm");
 
 let currentWords = [];    // Current words to type
 let typedWords = [];      // Previously typed words
 let currentWordIndex;     // Index of the current word in currentWords
 let currentWord;          // Current word to type
 let timerStarted = false; // If the timer is started
+let timerLength = 15;     // Timer length in seconds
 
 // Choose a random word from the word list
 function randomWord() {
@@ -66,11 +68,20 @@ function setup() {
   currentWord = currentWords[currentWordIndex];
 
   currentWordsDOM.innerHTML = currentWordsHighlighted();
+
+  // Show timer length
+  // TODO: minutes don't work, 1:30 shows as 0:90
+  timerDOM.textContent = `0:${timerLength}`;
+}
+
+// Calculate WPM
+function calculateWPM() {
+  return typedWords.length / (timerLength / 60);
 }
 
 // Start 30 second timer
 function startTimer() {
-  let timeLeft = 5;
+  let timeLeft = timerLength;
   
   let timer = setInterval(() => {
     // When timer ends return from setInterval
@@ -89,11 +100,10 @@ function startTimer() {
   }, 1000);
 }
 
-// When timer ends, calculate WPM
+// When timer ends, calculate and show WPM
 function endTimer() {
-  console.log("Timer Ended");
-
-  // TODO: Calculate WPM
+  let wpm = calculateWPM();
+  wpmDOM.textContent = `WPM: ${wpm}`;
 }
 
 // Whenever a letter is typed
