@@ -2,7 +2,6 @@
 
 const currentWordsDOM = document.getElementById("current-words");
 const typedWordsDOM = document.getElementById("typed-words");
-const currentWordDOM = document.getElementById("current-word");
 const typingAreaDOM = document.getElementById("typing-area");
 
 // Choose a random word from the word list
@@ -25,17 +24,19 @@ function updateColor(typed) {
   }
   // Show remaining letters in gray
   for (; i < currentWord.length; i++) {
-    coloredWord += `<span style="color:gray;">` + currentWord[i] + `</span>`;
+    coloredWord += `<span style="color:black;">` + currentWord[i] + `</span>`;
   }
 
-  currentWordDOM.innerHTML = coloredWord;
+  //currentWordDOM.innerHTML = coloredWord;
+
+  return coloredWord;
 }
 
 let currentWords = []; // Current words to type
 let typedWords = []; // Previously typed words
 
 for (let i = 0; i < 20; i++) {
-  currentWords.push(randomWord());
+  currentWords.push(randomWord().toLowerCase());
 }
 
 currentWordsDOM.textContent = currentWords.join(" ");
@@ -44,14 +45,17 @@ currentWordsDOM.textContent = currentWords.join(" ");
 let currentWordIndex = 0;
 let currentWord = currentWords[currentWordIndex];
 
-currentWordDOM.textContent = currentWord;
-
 typingAreaDOM.oninput = () => {
   // Currently typed word
   let typed = typingAreaDOM.value;
 
   // Show correct letters
-  updateColor(typed);
+  const coloredWord = updateColor(typed);
+
+  currentWithColored = [...currentWords];
+  currentWithColored[currentWordIndex] = coloredWord;
+
+  currentWordsDOM.innerHTML = currentWithColored.join(" ");
 
   // Next word on space
   if (typed === currentWord + " ") {
@@ -61,8 +65,6 @@ typingAreaDOM.oninput = () => {
     // Update current word
     currentWordIndex++;
     currentWord = currentWords[currentWordIndex];
-
-    currentWordDOM.textContent = currentWord;
 
     typingAreaDOM.value = "";
 
