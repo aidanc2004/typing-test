@@ -3,6 +3,7 @@
 const currentWordsDOM = document.getElementById("current-words");
 const typedWordsDOM = document.getElementById("typed-words");
 const typingAreaDOM = document.getElementById("typing-area");
+const timerDOM = document.getElementById("timer");
 
 let currentWords = []; // Current words to type
 let typedWords = [];   // Previously typed words
@@ -55,7 +56,7 @@ function currentWordsHighlighted() {
 // Fill list, set current word, etc
 function setup() {
   // Fill words list
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 30; i++) {
     currentWords.push(randomWord().toLowerCase());
   }
 
@@ -66,9 +67,39 @@ function setup() {
   currentWordsDOM.innerHTML = currentWordsHighlighted();
 }
 
+function startTimer() {
+  let timeLeft = 30;
+  
+  setInterval(() => {
+    // When timer ends return from setInterval
+    if (timeLeft === 0) {
+      endTimer();
+      return;
+    };
+    
+    timeLeft--;
+
+    // Pad timeLeft with zeros
+    timeString = String(timeLeft).padStart(2, "0");
+
+    timerDOM.textContent = `0:${timeString}`;
+  }, 1000);
+}
+
+function endTimer() {
+  console.log("Timer Ended");
+}
+
+let started = false;
+
 // Whenever a letter is typed
 typingAreaDOM.oninput = () => {
-  // ly typed word
+  if (started === false) {
+    started = true;
+    startTimer();
+  }
+  
+  // Currently typed word
   let typed = typingAreaDOM.value;
 
   // Show correct letters
