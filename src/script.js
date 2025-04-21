@@ -18,6 +18,13 @@ function randomWord() {
   return wordsList[Math.floor(Math.random() * wordsList.length)]
 }
 
+// Add random words to currentWords
+function addWords(num) {
+  for (let i = 0; i < num; i++) {
+    currentWords.push(randomWord().toLowerCase());
+  }
+}
+
 // Get length of currentWords exluding blank words
 function currentWordsLength() {
   return currentWords.filter(word => word !== "").length;
@@ -61,27 +68,31 @@ function currentWordsHighlighted() {
   return newWords.join(" ");
 }
 
+function formatTime(time) {
+  let minutes = Math.floor(time / 60);
+  let seconds = String(time % 60).padStart(2, "0");
+  
+  return `${minutes}:${seconds}`;
+}
+
 // Fill list, set current word, etc
 function setup() {
   // Fill words list
-  for (let i = 0; i < 30; i++) {
-    currentWords.push(randomWord().toLowerCase());
-  }
+  addWords(20);
 
   // Current word to type
   currentWordIndex = 0;
   currentWord = currentWords[currentWordIndex];
 
   currentWordsDOM.innerHTML = currentWordsHighlighted();
-
+  
   // Show timer length
-  // TODO: minutes don't work, 1:30 shows as 0:90
-  timerDOM.textContent = `0:${timerLength}`;
+  timerDOM.textContent = formatTime(timerLength);
 }
 
 // Calculate WPM
 function calculateWPM() {
-  return typedWords.length / (timerLength / 60);
+  return Math.floor(typedWords.length / (timerLength / 60));
 }
 
 // Start 30 second timer
@@ -99,9 +110,7 @@ function startTimer() {
     timeLeft--;
 
     // Pad timeLeft with zeros
-    timeString = String(timeLeft).padStart(2, "0");
-
-    timerDOM.textContent = `0:${timeString}`;
+    timerDOM.textContent = formatTime(timeLeft);
   }, 1000);
 }
 
@@ -133,6 +142,11 @@ typingAreaDOM.oninput = () => {
   if (typed === currentWord + " ") {
     typedWords.push(currentWord);
     currentWords[currentWordIndex] = "";
+
+    // Add more words if running out
+    if (currentWordsLength() < 10) {
+      addWords(10);
+    }
     
     // Update current word
     currentWordIndex++;
@@ -143,13 +157,6 @@ typingAreaDOM.oninput = () => {
     // Update current words list
     typedWordsDOM.textContent = typedWords.join(" ");
     currentWordsDOM.innerHTML = currentWordsHighlighted();
-  }
-
-  // Add more words
-  if (currentWordsLength() < 10) {
-    for (let i = 0; i < 10; i++) {
-      currentWords.push(randomWord().toLowerCase());
-    }
   }
 }
 
