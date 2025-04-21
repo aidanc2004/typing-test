@@ -3,6 +3,8 @@
 const currentWordsDOM = document.getElementById("current-words");
 const typedWordsDOM = document.getElementById("typed-words");
 const typingAreaDOM = document.getElementById("typing-area");
+const resultsDOM = document.getElementById("results");
+const restartDOM = document.getElementById("restart");
 const timerDOM = document.getElementById("timer");
 const wpmDOM = document.getElementById("wpm");
 
@@ -11,7 +13,7 @@ let typedWords = [];      // Previously typed words
 let currentWordIndex;     // Index of the current word in currentWords
 let currentWord;          // Current word to type
 let timerStarted = false; // If the timer is started
-let timerLength = 30;     // Timer length in seconds
+let timerLength = 5;     // Timer length in seconds
 
 // Choose a random word from the word list
 function randomWord() {
@@ -88,11 +90,45 @@ function setup() {
   
   // Show timer length
   timerDOM.textContent = formatTime(timerLength);
+
+  typingAreaDOM.value = "";
 }
 
 // Calculate WPM
 function calculateWPM() {
   return Math.floor(typedWords.length / (timerLength / 60));
+}
+
+// Show/hide results
+function toggleResults() {
+  const display = resultsDOM.style.display;
+  
+  if (display === "none") {
+    resultsDOM.style.display = "block";
+  } else {
+    resultsDOM.style.display = "none";
+  }
+}
+
+// Restart the test
+function restart() {
+  timerStarted = false;
+  typingAreaDOM.disabled = false;
+
+  currentWords = [];
+  typedWords = [];
+
+  addWords(20);
+
+  currentWordIndex = 0;
+  currentWord = currentWords[currentWordIndex];
+
+  typingAreaDOM.value = "";
+  
+  toggleResults();
+
+  typedWordsDOM.textContent = typedWords.join(" ");
+  currentWordsDOM.innerHTML = currentWordsHighlighted();
 }
 
 // Start 30 second timer
@@ -118,6 +154,10 @@ function startTimer() {
 function endTimer() {
   let wpm = calculateWPM();
   wpmDOM.textContent = `WPM: ${wpm}`;
+
+  typingAreaDOM.disabled = true;
+
+  toggleResults();
 }
 
 // Whenever a letter is typed
@@ -159,6 +199,8 @@ typingAreaDOM.oninput = () => {
     currentWordsDOM.innerHTML = currentWordsHighlighted();
   }
 }
+
+restartDOM.onclick = restart;
 
 // Start app
 setup();

@@ -1,4 +1,4 @@
-<!-- Aidan Carey, April 2025 -->
+<!-- Aidan Carey, April 2025  -->
 
 <!doctype html>
 <html lang="en">
@@ -19,8 +19,15 @@
     <input id="typing-area" name="" type="text" value=""/>
 
     <p id="timer"></p>
-    <p id="wpm"></p>
-    
+
+    <div id="results-container">
+      <!-- Inline style so we can easily modify it from DOM -->
+      <div id="results" style="display:none;">
+        <p id="wpm"></p>
+        <button id="restart">Restart</button>
+      </div>
+    </div>
+
     <footer>
       <p>Aidan Carey, April 2025</p>
     </footer>
